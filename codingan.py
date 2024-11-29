@@ -52,7 +52,7 @@ def display_table(index):
         key=f"treatment_place_{index}"
     )
 
-    # Filter untuk Doctor Name
+    # Filter untuk Doctor Name, tergantung pada pilihan Group Provider dan Treatment Place
     selected_doctors = st.multiselect(
         f"[Tabel {index}] Pilih Doctor Name:",
         options=filtered_temp['DoctorName'].dropna().unique() if 'DoctorName' in filtered_temp.columns else [],
@@ -60,7 +60,7 @@ def display_table(index):
         key=f"doctor_name_{index}"
     )
 
-    # Filter untuk Primary Diagnosis
+    # Filter untuk Primary Diagnosis, tergantung pada pilihan sebelumnya
     selected_diagnosis = st.multiselect(
         f"[Tabel {index}] Pilih Primary Diagnosis:",
         options=filtered_temp['PrimaryDiagnosis'].dropna().unique() if 'PrimaryDiagnosis' in filtered_temp.columns else [],
@@ -68,7 +68,7 @@ def display_table(index):
         key=f"primary_diagnosis_{index}"
     )
 
-    # Filter untuk Product Type
+    # Filter untuk Product Type, tergantung pada pilihan sebelumnya
     selected_product_types = st.multiselect(
         f"[Tabel {index}] Pilih Product Type:",
         options=filtered_temp['ProductType'].dropna().unique() if 'ProductType' in filtered_temp.columns else [],
