@@ -45,10 +45,13 @@ def display_table(index):
         key=f"group_provider_{index}"
     )
 
-    # Filter data sementara berdasarkan Group Provider
-    filtered_temp = df[df['GroupProvider'].isin(selected_group_providers)] if selected_group_providers else df.copy()
-
     # Filter untuk Treatment Place berdasarkan Group Provider
+    if selected_group_providers:
+        filtered_temp = df[df['GroupProvider'].isin(selected_group_providers)]
+    else:
+        filtered_temp = df.copy()
+
+    # Filter untuk Treatment Place
     selected_treatment_places = st.multiselect(
         f"[Tabel {index}] Pilih Treatment Place:",
         options=filtered_temp['TreatmentPlace'].dropna().unique() if 'TreatmentPlace' in filtered_temp.columns else [],
@@ -156,6 +159,7 @@ def display_table(index):
             st.pyplot(fig)
         else:
             st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
+
 
 # Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
 for i in range(1, st.session_state.table_count + 1):
