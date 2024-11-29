@@ -90,10 +90,14 @@ def display_table(index):
     if filtered_df.empty:
         st.warning(f"Tidak ada data untuk filter di tabel {index}.")
     else:
-        # Menampilkan tabel
+        # Menampilkan hanya kolom yang diinginkan
+        selected_columns = ["Nama Item Garda Medika", "Golongan", "Subgolongan", "Komposisi Zat Aktif", "Qty"]
+        filtered_df = filtered_df[selected_columns]
+
+        # Menampilkan tabel dengan kolom yang sudah dipilih
         st.dataframe(filtered_df, height=300)
 
-        # Total Amount Bill
+        # Total Amount Bill (dalam hal kolom tersebut ada)
         if 'Amount Bill' in filtered_df.columns:
             filtered_df['Amount Bill'] = pd.to_numeric(filtered_df['Amount Bill'], errors='coerce').fillna(0)
             total_amount_bill = filtered_df['Amount Bill'].sum()
@@ -102,7 +106,7 @@ def display_table(index):
         else:
             st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
 
-        # WordCloud
+        # WordCloud (dalam hal kolom tersebut ada)
         if 'Nama Item Garda Medika' in filtered_df.columns:
             st.subheader("WordCloud")
             wordcloud_text = " ".join(filtered_df['Nama Item Garda Medika'].dropna().astype(str))
