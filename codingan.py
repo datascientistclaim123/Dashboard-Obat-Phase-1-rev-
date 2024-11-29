@@ -3,6 +3,14 @@ import pandas as pd
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
+# Cache untuk membaca dataset
+@st.cache_data
+def load_data(file_path):
+    return pd.read_excel(file_path)
+
+# Load data dari file baru
+df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
+
 # Fungsi untuk menghitung median berbobot berdasarkan kolom Qty
 def weighted_median(group):
 
@@ -17,14 +25,6 @@ def weighted_median(group):
     # Cari baris di mana cumulative Qty melewati median
     median_row = group[group["CumulativeQty"] >= median_qty].iloc[0]
     return median_row["Harga Satuan"]
-
-# Cache untuk membaca dataset
-@st.cache_data
-def load_data(file_path):
-    return pd.read_excel(file_path)
-
-# Load data dari file baru
-df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
 
 # Pastikan kolom Qty dan Amount Bill adalah numerik
 df['Qty'] = pd.to_numeric(df['Qty'], errors='coerce').fillna(0)
