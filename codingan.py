@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 
 # Fungsi untuk menghitung median berbobot berdasarkan kolom Qty
 def weighted_median(group):
+
+    group["Harga Satuan"] = group["Harga Satuan"].fillna(0)
+    
     # Urutkan data berdasarkan Harga Satuan
     group = group.sort_values("Harga Satuan").reset_index()
     # Hitung jumlah kumulatif Qty
