@@ -64,7 +64,7 @@ def display_table(index):
             filtered_df['Amount Bill'] = pd.to_numeric(filtered_df['Amount Bill'], errors='coerce').fillna(0)
             total_amount_bill = filtered_df['Amount Bill'].sum()
             formatted_total = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
-            st.text(f"Total Amount Bill: {formatted_total}")
+            st.text(f"**Total Amount Bill: {formatted_total}**")
         else:
             st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
 
