@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import re
 
 # Cache untuk membaca dataset
 @st.cache_data
@@ -146,12 +147,14 @@ def display_table(index):
             wordcloud_text = " ".join(grouped_df['Nama Item Garda Medika'].dropna().astype(str))
             
             # Daftar kata yang ingin dihapus
-            # excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
+            excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
                              # "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER"]
             
-            # Hapus kata-kata yang ada dalam daftar
-            #for word in excluded_words:
-                # wordcloud_text = wordcloud_text.replace(word, "")
+            # Gabungkan semua kata yang akan dihapus menjadi pola regex
+            excluded_pattern = r'\b(?:' + '|'.join(map(re.escape, excluded_words)) + r')\b'
+
+            # Hapus kata-kata dalam excluded_words tanpa menghapus bagian dari kata lain
+            wordcloud_text = re.sub(excluded_pattern, '', wordcloud_text, flags=re.IGNORECASE)
             
             # Buat WordCloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
