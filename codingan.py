@@ -100,26 +100,31 @@ def display_table(index):
     if filtered_df.empty:
         st.warning(f"Tidak ada data untuk filter di tabel {index}.")
     else:
-        # Menampilkan hanya kolom yang diinginkan
-        selected_columns = ["Nama Item Garda Medika", "Golongan", "Subgolongan", "Komposisi Zat Aktif", "Qty", "Amount Bill", "Harga Satuan"]
-        filtered_df = filtered_df[selected_columns]
+        # Mengelompokkan berdasarkan "Nama Item Garda Medika"
+        grouped_df = filtered_df.groupby("Nama Item Garda Medika").agg(
+            Qty=('Qty', 'sum'),
+            AmountBill=('Amount Bill', 'sum'),
+            HargaSatuan=('Harga Satuan', 'median'),
+            Golongan=('Golongan', 'first'),  # Mengambil nilai pertama untuk kolom lain yang relevan
+            Subgolongan=('Subgolongan', 'first'),
+            KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
+        ).reset_index()
 
-        # Menampilkan tabel dengan kolom yang sudah dipilih
-        st.dataframe(filtered_df, height=300)
+        # Menampilkan tabel yang sudah digabungkan
+        st.dataframe(grouped_df, height=300)
 
         # Total Amount Bill (dalam hal kolom tersebut ada)
-        if 'Amount Bill' in filtered_df.columns:
-            filtered_df['Amount Bill'] = pd.to_numeric(filtered_df['Amount Bill'], errors='coerce').fillna(0)
-            total_amount_bill = filtered_df['Amount Bill'].sum()
+        if 'AmountBill' in grouped_df.columns:
+            total_amount_bill = grouped_df['AmountBill'].sum()
             formatted_total = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
             st.markdown(f"**Total Amount Bill: {formatted_total}**")
         else:
             st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
 
         # WordCloud (dalam hal kolom tersebut ada)
-        if 'Nama Item Garda Medika' in filtered_df.columns:
+        if 'Nama Item Garda Medika' in grouped_df.columns:
             st.subheader("WordCloud")
-            wordcloud_text = " ".join(filtered_df['Nama Item Garda Medika'].dropna().astype(str))
+            wordcloud_text = " ".join(grouped_df['Nama Item Garda Medika'].dropna().astype(str))
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
 
             fig, ax = plt.subplots(figsize=(10, 5))
