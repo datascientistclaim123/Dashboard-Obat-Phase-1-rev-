@@ -114,6 +114,17 @@ def display_table(index):
             KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
         ).reset_index()
 
+        # Hilangkan desimal dengan pembulatan
+        grouped_df['Qty'] = grouped_df['Qty'].astype(int)  # Ubah menjadi integer
+        grouped_df['AmountBill'] = grouped_df['AmountBill'].astype(int)  # Ubah menjadi integer
+        grouped_df['HargaSatuan'] = grouped_df['HargaSatuan'].round(0).astype(int)  # Pembulatan ke bilangan bulat
+
+        # Pindahkan kolom Qty, Amount Bill, dan Harga Satuan ke paling kanan
+        column_order = [
+            col for col in grouped_df.columns if col not in ['Qty', 'AmountBill', 'HargaSatuan']
+        ] + ['Qty', 'AmountBill', 'HargaSatuan']
+        grouped_df = grouped_df[column_order]
+
         # Menampilkan tabel yang sudah digabungkan
         st.dataframe(grouped_df, height=300)
 
