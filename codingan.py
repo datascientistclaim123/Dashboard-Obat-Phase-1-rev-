@@ -141,15 +141,28 @@ def display_table(index):
         # WordCloud (dalam hal kolom tersebut ada)
         if 'Nama Item Garda Medika' in grouped_df.columns:
             st.subheader("WordCloud")
+            
+            # Gabungkan semua teks dari kolom 'Nama Item Garda Medika'
             wordcloud_text = " ".join(grouped_df['Nama Item Garda Medika'].dropna().astype(str))
+            
+            # Daftar kata yang ingin dihapus
+            excluded_words = ["Forte", "Plus", "Infusan", "Infus", "Otsu", "SP", "D", "S"]
+            
+            # Hapus kata-kata yang ada dalam daftar
+            for word in excluded_words:
+                wordcloud_text = wordcloud_text.replace(word, "")
+            
+            # Buat WordCloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
 
+            # Tampilkan WordCloud
             fig, ax = plt.subplots(figsize=(10, 5))
             ax.imshow(wordcloud, interpolation="bilinear")
             ax.axis("off")
             st.pyplot(fig)
         else:
             st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
+
 
 # Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
 for i in range(1, st.session_state.table_count + 1):
