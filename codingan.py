@@ -117,7 +117,7 @@ def display_table(index):
         # Hilangkan desimal dengan pembulatan
         grouped_df['Qty'] = grouped_df['Qty'].astype(int)  # Ubah menjadi integer
         grouped_df['AmountBill'] = grouped_df['AmountBill'].astype(int)  # Ubah menjadi integer
-        grouped_df['HargaSatuan'] = grouped_df['HargaSatuan'].round(0).astype(int)  # Pembulatan ke bilangan bulat
+        grouped_df['HargaSatuan'] = grouped_df['HargaSatuan'].fillna(0).round(0).astype(int)  # Isi NaN dengan 0, lalu bulatkan
 
         # Pindahkan kolom Qty, Amount Bill, dan Harga Satuan ke paling kanan
         column_order = [
