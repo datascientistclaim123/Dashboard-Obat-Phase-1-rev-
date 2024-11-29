@@ -101,7 +101,7 @@ def display_table(index):
         st.warning(f"Tidak ada data untuk filter di tabel {index}.")
     else:
         # Menampilkan hanya kolom yang diinginkan
-        selected_columns = ["Nama Item Garda Medika", "Golongan", "Subgolongan", "Komposisi Zat Aktif", "Qty"]
+        selected_columns = ["Nama Item Garda Medika", "Golongan", "Subgolongan", "Komposisi Zat Aktif", "Qty", "Amount Bill", "Harga Satuan"]
         filtered_df = filtered_df[selected_columns]
 
         # Menampilkan tabel dengan kolom yang sudah dipilih
