@@ -147,11 +147,11 @@ def display_table(index):
             
             # Daftar kata yang ingin dihapus
             # excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
-                             "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER"]
+                             # "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER"]
             
             # Hapus kata-kata yang ada dalam daftar
-            for word in excluded_words:
-                wordcloud_text = wordcloud_text.replace(word, "")
+            #for word in excluded_words:
+                # wordcloud_text = wordcloud_text.replace(word, "")
             
             # Buat WordCloud
             wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
