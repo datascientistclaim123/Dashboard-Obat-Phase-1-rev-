@@ -114,7 +114,7 @@ def display_table(index):
         # Pindahkan kolom Qty, Amount Bill, dan Harga Satuan ke paling kanan
         column_order = [
             col for col in grouped_df.columns if col not in ['Qty', 'Amount Bill', 'Harga Satuan']
-        ] + ['Qty', 'AmountBill', 'HargaSatuan']
+        ] + ['Qty', 'Amount Bill', 'Harga Satuan']
         grouped_df = grouped_df[column_order]
 
         # Menampilkan tabel yang sudah digabungkan
