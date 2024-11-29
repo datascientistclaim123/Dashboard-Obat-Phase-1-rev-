@@ -137,4 +137,25 @@ def display_table(index):
             
             # Daftar kata yang ingin dihapus
             excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
-                   
+                                "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER", "SR", "RL", "PFS", "MR", "DP", "NS", "WIDA" , "E",
+                             "Q", "TB", "TABLET", "GP", "MMR", "M", "WI", "Z", "NEO", "MIX", "GRANULE", "TT", "NA", "CL", "L", "FT", "MG", "KID", "HCL"]
+            
+            # Gabungkan semua kata yang akan dihapus menjadi pola regex
+            excluded_pattern = r'\b(?:' + '|'.join(map(re.escape, excluded_words)) + r')\b'
+
+            # Hapus kata-kata dalam excluded_words tanpa menghapus bagian dari kata lain
+            wordcloud_text = re.sub(excluded_pattern, '', wordcloud_text, flags=re.IGNORECASE)
+            
+            # Buat WordCloud
+            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
+
+            # Tampilkan WordCloud
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.imshow(wordcloud, interpolation="bilinear")
+            ax.axis("off")
+            st.pyplot(fig)
+        else:
+            st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
+
+# Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
+for i in range(1
