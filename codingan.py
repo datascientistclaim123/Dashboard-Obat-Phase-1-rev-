@@ -11,6 +11,10 @@ def load_data(file_path):
 # Load data dari file baru
 df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
 
+# Pastikan kolom Qty dan Amount Bill adalah numerik
+df['Qty'] = pd.to_numeric(df['Qty'], errors='coerce').fillna(0)
+df['Amount Bill'] = pd.to_numeric(df['Amount Bill'], errors='coerce').fillna(0)
+
 # Streamlit App Title
 st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
 
