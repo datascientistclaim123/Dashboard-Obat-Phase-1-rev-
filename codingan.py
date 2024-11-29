@@ -18,9 +18,11 @@ df['Amount Bill'] = pd.to_numeric(df['Amount Bill'], errors='coerce').fillna(0)
 # Streamlit App Title
 st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
 
+# Tambahkan teks kecil untuk "Created by"
+st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
+
 # Menampilkan preview data
 st.subheader("Preview Data")
-st.write(f"Dataset berisi {df.shape[0]} baris dan {df.shape[1]} kolom.")
 st.dataframe(df)
 
 # Container untuk mengelola tabel dinamis
