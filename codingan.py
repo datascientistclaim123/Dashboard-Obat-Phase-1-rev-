@@ -8,6 +8,19 @@ import matplotlib.pyplot as plt
 def load_data(file_path):
     return pd.read_excel(file_path)
 
+# Fungsi untuk menghitung median berbobot
+def weighted_median(df, value_col, weight_col):
+    """Menghitung median berbobot berdasarkan kolom nilai dan bobot"""
+    # Mengurutkan data berdasarkan kolom nilai
+    df_sorted = df.sort_values(by=value_col).reset_index(drop=True)
+    # Menghitung jumlah kumulatif bobot
+    cumsum_weights = df_sorted[weight_col].cumsum()
+    # Menentukan titik median (50% dari total bobot)
+    cutoff = df_sorted[weight_col].sum() / 2.0
+    # Mendapatkan nilai median berbobot
+    median = df_sorted.loc[cumsum_weights >= cutoff, value_col].iloc[0]
+    return median
+
 # Load data dari file baru
 df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
 
@@ -104,15 +117,19 @@ def display_table(index):
     if filtered_df.empty:
         st.warning(f"Tidak ada data untuk filter di tabel {index}.")
     else:
-        # Mengelompokkan berdasarkan "Nama Item Garda Medika"
-        grouped_df = filtered_df.groupby("Nama Item Garda Medika").agg(
-            Qty=('Qty', 'sum'),
-            AmountBill=('Amount Bill', 'sum'),
-            HargaSatuan=('Harga Satuan', 'median'),
-            Golongan=('Golongan', 'first'),  # Mengambil nilai pertama untuk kolom lain yang relevan
-            Subgolongan=('Subgolongan', 'first'),
-            KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
-        ).reset_index()
+        # Hitung grouped_df dengan median berbobot
+        grouped_df = (
+            filtered_df.groupby("Nama Item Garda Medika")
+            .apply(lambda group: pd.Series({
+                'Qty': group['Qty'].sum(),
+                'AmountBill': group['Amount Bill'].sum(),
+                'HargaSatuan': weighted_median(group, value_col='Harga Satuan', weight_col='Qty'),
+                'Golongan': group['Golongan'].iloc[0],
+                'Subgolongan': group['Subgolongan'].iloc[0],
+                'KomposisiZatAktif': group['Komposisi Zat Aktif'].iloc[0],
+            }))
+            .reset_index()
+        )
 
         # Menampilkan tabel yang sudah digabungkan
         st.dataframe(grouped_df, height=300)
