@@ -52,10 +52,40 @@ def display_table(index):
         key=f"treatment_place_{index}"
     )
 
-    # Filter data akhir berdasarkan kedua filter
+    # Filter untuk Doctor Name
+    selected_doctors = st.multiselect(
+        f"[Tabel {index}] Pilih Doctor Name:",
+        options=filtered_temp['DoctorName'].dropna().unique() if 'DoctorName' in filtered_temp.columns else [],
+        default=[],
+        key=f"doctor_name_{index}"
+    )
+
+    # Filter untuk Primary Diagnosis
+    selected_diagnosis = st.multiselect(
+        f"[Tabel {index}] Pilih Primary Diagnosis:",
+        options=filtered_temp['PrimaryDiagnosis'].dropna().unique() if 'PrimaryDiagnosis' in filtered_temp.columns else [],
+        default=[],
+        key=f"primary_diagnosis_{index}"
+    )
+
+    # Filter untuk Product Type
+    selected_product_types = st.multiselect(
+        f"[Tabel {index}] Pilih Product Type:",
+        options=filtered_temp['ProductType'].dropna().unique() if 'ProductType' in filtered_temp.columns else [],
+        default=[],
+        key=f"product_type_{index}"
+    )
+
+    # Filter data akhir berdasarkan semua filter
     filtered_df = filtered_temp.copy()
     if selected_treatment_places:
         filtered_df = filtered_df[filtered_df['TreatmentPlace'].isin(selected_treatment_places)]
+    if selected_doctors:
+        filtered_df = filtered_df[filtered_df['DoctorName'].isin(selected_doctors)]
+    if selected_diagnosis:
+        filtered_df = filtered_df[filtered_df['PrimaryDiagnosis'].isin(selected_diagnosis)]
+    if selected_product_types:
+        filtered_df = filtered_df[filtered_df['ProductType'].isin(selected_product_types)]
 
     if filtered_df.empty:
         st.warning(f"Tidak ada data untuk filter di tabel {index}.")
