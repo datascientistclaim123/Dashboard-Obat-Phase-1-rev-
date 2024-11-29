@@ -1,3 +1,32 @@
+import streamlit as st
+import pandas as pd
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
+# Cache untuk membaca dataset
+@st.cache_data
+def load_data(file_path):
+    return pd.read_excel(file_path)
+
+# Load data dari file baru
+df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
+
+# Streamlit App Title
+st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
+
+# Menampilkan preview data
+st.subheader("Preview Data")
+st.write(f"Dataset berisi {df.shape[0]} baris dan {df.shape[1]} kolom.")
+st.dataframe(df)
+
+# Container untuk mengelola tabel dinamis
+tabel_container = st.container()
+
+# State untuk menyimpan jumlah tabel yang ditampilkan
+if "table_count" not in st.session_state:
+    st.session_state.table_count = 1  # Mulai dengan 1 tabel
+
+# Fungsi untuk menampilkan tabel berdasarkan filter
 def display_table(index):
     st.subheader(f"Tabel {index}")
     
@@ -56,3 +85,11 @@ def display_table(index):
         else:
             st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
 
+# Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
+for i in range(1, st.session_state.table_count + 1):
+    with tabel_container:
+        display_table(i)
+
+# Tombol untuk menambah tabel baru
+if st.button("Insert Tabel Baru"):
+    st.session_state.table_count += 1
