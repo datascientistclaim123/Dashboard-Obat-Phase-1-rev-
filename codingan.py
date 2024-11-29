@@ -146,7 +146,7 @@ def display_table(index):
             wordcloud_text = " ".join(grouped_df['Nama Item Garda Medika'].dropna().astype(str))
             
             # Daftar kata yang ingin dihapus
-            excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
+            # excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
                              "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER"]
             
             # Hapus kata-kata yang ada dalam daftar
