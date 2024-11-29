@@ -14,7 +14,7 @@ df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan pat
 # Fungsi untuk menghitung median berbobot berdasarkan kolom Qty
 def weighted_median(group):
 
-    group["Harga Satuan"] = group["Harga Satuan"].fillna(0)
+    group["HargaSatuan"] = group["HargaSatuan"].fillna(0)
     
     # Urutkan data berdasarkan Harga Satuan
     group = group.sort_values("Harga Satuan").reset_index()
