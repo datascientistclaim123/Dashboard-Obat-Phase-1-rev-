@@ -9,7 +9,7 @@ def load_data(file_path):
     return pd.read_excel(file_path)
 
 # Load data dari file baru
-df = load_data("Data Obat Input Billing Manual.xlsx")  # Ganti dengan path file yang diunggah
+df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
 
 # Streamlit App Title
 st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
