@@ -3,6 +3,21 @@ import pandas as pd
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
+# Fungsi untuk menghitung median berbobot berdasarkan kolom Qty
+def weighted_median(group):
+
+    group["HargaSatuan"] = group["HargaSatuan"].fillna(0)
+    
+    # Urutkan data berdasarkan Harga Satuan
+    group = group.sort_values("HargaSatuan").reset_index()
+    # Hitung jumlah kumulatif Qty
+    group["CumulativeQty"] = group["Qty"].cumsum()
+    # Cari total median pada kolom Qty
+    median_qty = group["Qty"].sum() / 2
+    # Cari baris di mana cumulative Qty melewati median
+    median_row = group[group["CumulativeQty"] >= median_qty].iloc[0]
+    return median_row["HargaSatuan"]
+
 # Cache untuk membaca dataset
 @st.cache_data
 def load_data(file_path):
@@ -108,7 +123,7 @@ def display_table(index):
         grouped_df = filtered_df.groupby("Nama Item Garda Medika").agg(
             Qty=('Qty', 'sum'),
             AmountBill=('Amount Bill', 'sum'),
-            HargaSatuan=('Harga Satuan', 'median'),
+            HargaSatuan=('Harga Satuan', weighted_median),  # Gunakan median berbobot
             Golongan=('Golongan', 'first'),  # Mengambil nilai pertama untuk kolom lain yang relevan
             Subgolongan=('Subgolongan', 'first'),
             KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
