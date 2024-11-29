@@ -158,4 +158,10 @@ def display_table(index):
             st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
 
 # Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
-for i in range(1)
+for i in range(1, st.session_state.table_count + 1):
+    with tabel_container:
+        display_table(i)
+
+# Tombol untuk menambah tabel baru
+if st.button("Insert Tabel Baru"):
+    st.session_state.table_count += 1
