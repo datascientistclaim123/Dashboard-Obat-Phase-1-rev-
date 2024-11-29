@@ -108,21 +108,21 @@ def display_table(index):
 
         # Hilangkan desimal dengan pembulatan
         grouped_df['Qty'] = grouped_df['Qty'].astype(int)
-        grouped_df['Amount Bill'] = grouped_df['Amount Bill'].astype(int)
-        grouped_df['Harga Satuan'] = grouped_df['Harga Satuan'].fillna(0).round(0).astype(int)
+        grouped_df['AmountBill'] = grouped_df['AmountBill'].astype(int)
+        grouped_df['HargaSatuan'] = grouped_df['HargaSatuan'].fillna(0).round(0).astype(int)
 
         # Pindahkan kolom Qty, Amount Bill, dan Harga Satuan ke paling kanan
         column_order = [
-            col for col in grouped_df.columns if col not in ['Qty', 'Amount Bill', 'Harga Satuan']
-        ] + ['Qty', 'Amount Bill', 'Harga Satuan']
+            col for col in grouped_df.columns if col not in ['Qty', 'AmountBill', 'HargaSatuan']
+        ] + ['Qty', 'AmountBill', 'HargaSatuan']
         grouped_df = grouped_df[column_order]
 
         # Menampilkan tabel yang sudah digabungkan
         st.dataframe(grouped_df, height=300)
 
         # Total Amount Bill (dalam hal kolom tersebut ada)
-        if 'Amount Bill' in grouped_df.columns:
-            total_amount_bill = grouped_df['Amount Bill'].sum()
+        if 'AmountBill' in grouped_df.columns:
+            total_amount_bill = grouped_df['AmountBill'].sum()
             formatted_total = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
             st.markdown(f"**Total Amount Bill: {formatted_total}**")
         else:
