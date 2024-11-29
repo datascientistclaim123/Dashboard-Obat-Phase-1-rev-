@@ -65,10 +65,15 @@ def display_table(index):
         key=f"doctor_name_{index}"
     )
 
-    # Filter untuk Primary Diagnosis, tergantung pada pilihan sebelumnya
+    # Filter untuk Primary Diagnosis, tergantung pada pilihan sebelumnya (Doctor Name dan Treatment Place)
+    if selected_doctors:
+        filtered_diagnosis = filtered_temp[filtered_temp['DoctorName'].isin(selected_doctors)]['PrimaryDiagnosis'].dropna().unique()
+    else:
+        filtered_diagnosis = filtered_temp['PrimaryDiagnosis'].dropna().unique()
+
     selected_diagnosis = st.multiselect(
         f"[Tabel {index}] Pilih Primary Diagnosis:",
-        options=filtered_temp['PrimaryDiagnosis'].dropna().unique() if 'PrimaryDiagnosis' in filtered_temp.columns else [],
+        options=filtered_diagnosis,
         default=[],
         key=f"primary_diagnosis_{index}"
     )
