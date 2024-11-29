@@ -11,21 +11,6 @@ def load_data(file_path):
 # Load data dari file baru
 df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan path file yang diunggah
 
-# Fungsi untuk menghitung median berbobot berdasarkan kolom Qty
-def weighted_median(group):
-
-    group["Harga Satuan"] = group["Harga Satuan"].fillna(0)
-    
-    # Urutkan data berdasarkan Harga Satuan
-    group = group.sort_values("Harga Satuan").reset_index()
-    # Hitung jumlah kumulatif Qty
-    group["CumulativeQty"] = group["Qty"].cumsum()
-    # Cari total median pada kolom Qty
-    median_qty = group["Qty"].sum() / 2
-    # Cari baris di mana cumulative Qty melewati median
-    median_row = group[group["CumulativeQty"] >= median_qty].iloc[0]
-    return median_row["Harga Satuan"]
-
 # Pastikan kolom Qty dan Amount Bill adalah numerik
 df['Qty'] = pd.to_numeric(df['Qty'], errors='coerce').fillna(0)
 df['Amount Bill'] = pd.to_numeric(df['Amount Bill'], errors='coerce').fillna(0)
@@ -123,7 +108,7 @@ def display_table(index):
         grouped_df = filtered_df.groupby("Nama Item Garda Medika").agg(
             Qty=('Qty', 'sum'),
             AmountBill=('Amount Bill', 'sum'),
-            HargaSatuan=('Harga Satuan', weighted_median),  # Gunakan median berbobot
+            HargaSatuan=('Harga Satuan', 'median'),
             Golongan=('Golongan', 'first'),  # Mengambil nilai pertama untuk kolom lain yang relevan
             Subgolongan=('Subgolongan', 'first'),
             KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
