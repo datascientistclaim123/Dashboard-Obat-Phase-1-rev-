@@ -148,7 +148,7 @@ def display_table(index):
             
             # Daftar kata yang ingin dihapus
             excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
-                                "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER"]
+                                "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER", "SR", "RL", "PFS", "MR"]
             
             # Gabungkan semua kata yang akan dihapus menjadi pola regex
             excluded_pattern = r'\b(?:' + '|'.join(map(re.escape, excluded_words)) + r')\b'
