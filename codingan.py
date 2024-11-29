@@ -37,53 +37,69 @@ if "table_count" not in st.session_state:
 def display_table(index):
     st.subheader(f"Tabel {index}")
 
-    # Filter untuk Group Provider
+    # Ambil filter dari session_state jika ada
+    selected_group_providers = st.session_state.get(f"group_provider_{index}", [])
+    selected_treatment_places = st.session_state.get(f"treatment_place_{index}", [])
+    selected_doctors = st.session_state.get(f"doctor_name_{index}", [])
+    selected_diagnosis = st.session_state.get(f"primary_diagnosis_{index}", [])
+    selected_product_types = st.session_state.get(f"product_type_{index}", [])
+
+    # Filter data berdasarkan semua pilihan saat ini
+    filtered_df = df.copy()
+    if selected_group_providers:
+        filtered_df = filtered_df[filtered_df['GroupProvider'].isin(selected_group_providers)]
+    if selected_treatment_places:
+        filtered_df = filtered_df[filtered_df['TreatmentPlace'].isin(selected_treatment_places)]
+    if selected_doctors:
+        filtered_df = filtered_df[filtered_df['DoctorName'].isin(selected_doctors)]
+    if selected_diagnosis:
+        filtered_df = filtered_df[filtered_df['PrimaryDiagnosis'].isin(selected_diagnosis)]
+    if selected_product_types:
+        filtered_df = filtered_df[filtered_df['ProductType'].isin(selected_product_types)]
+
+    # Pilihan untuk setiap filter berdasarkan data yang sudah difilter
+    group_provider_options = filtered_df['GroupProvider'].dropna().unique()
+    treatment_place_options = filtered_df['TreatmentPlace'].dropna().unique()
+    doctor_options = filtered_df['DoctorName'].dropna().unique()
+    diagnosis_options = filtered_df['PrimaryDiagnosis'].dropna().unique()
+    product_type_options = filtered_df['ProductType'].dropna().unique()
+
+    # Komponen filter
     selected_group_providers = st.multiselect(
         f"[Tabel {index}] Pilih Group Provider:",
-        options=df['GroupProvider'].dropna().unique() if 'GroupProvider' in df.columns else [],
-        default=[],
+        options=group_provider_options,
+        default=selected_group_providers,
         key=f"group_provider_{index}"
     )
-
-    # Filter data sementara berdasarkan Group Provider
-    filtered_temp = df[df['GroupProvider'].isin(selected_group_providers)] if selected_group_providers else df.copy()
-
-    # Filter untuk Treatment Place berdasarkan Group Provider
     selected_treatment_places = st.multiselect(
         f"[Tabel {index}] Pilih Treatment Place:",
-        options=filtered_temp['TreatmentPlace'].dropna().unique() if 'TreatmentPlace' in filtered_temp.columns else [],
-        default=[],
+        options=treatment_place_options,
+        default=selected_treatment_places,
         key=f"treatment_place_{index}"
     )
-
-    # Filter untuk Doctor Name berdasarkan Treatment Place
-    filtered_doctors = filtered_temp[filtered_temp['TreatmentPlace'].isin(selected_treatment_places)]['DoctorName'].dropna().unique() if selected_treatment_places else filtered_temp['DoctorName'].dropna().unique()
     selected_doctors = st.multiselect(
         f"[Tabel {index}] Pilih Doctor Name:",
-        options=filtered_doctors,
-        default=[],
+        options=doctor_options,
+        default=selected_doctors,
         key=f"doctor_name_{index}"
     )
-
-    # Filter untuk Primary Diagnosis berdasarkan Doctor Name
-    filtered_diagnosis = filtered_temp[filtered_temp['DoctorName'].isin(selected_doctors)]['PrimaryDiagnosis'].dropna().unique() if selected_doctors else filtered_temp['PrimaryDiagnosis'].dropna().unique()
     selected_diagnosis = st.multiselect(
         f"[Tabel {index}] Pilih Primary Diagnosis:",
-        options=filtered_diagnosis,
-        default=[],
+        options=diagnosis_options,
+        default=selected_diagnosis,
         key=f"primary_diagnosis_{index}"
     )
-
-    # Filter untuk Product Type
     selected_product_types = st.multiselect(
         f"[Tabel {index}] Pilih Product Type:",
-        options=filtered_temp['ProductType'].dropna().unique() if 'ProductType' in filtered_temp.columns else [],
-        default=[],
+        options=product_type_options,
+        default=selected_product_types,
         key=f"product_type_{index}"
     )
 
-    # Filter data akhir berdasarkan semua filter
-    filtered_df = filtered_temp.copy()
+    # Filter ulang data berdasarkan input terbaru
+    filtered_df = df.copy()
+    if selected_group_providers:
+        filtered_df = filtered_df[filtered_df['GroupProvider'].isin(selected_group_providers)]
     if selected_treatment_places:
         filtered_df = filtered_df[filtered_df['TreatmentPlace'].isin(selected_treatment_places)]
     if selected_doctors:
@@ -138,7 +154,7 @@ def display_table(index):
             # Daftar kata yang ingin dihapus
             excluded_words = ["FORTE", "PLUS","PLU", "INFLUAN", "INFUSAN", "INFUS", "OTSU", "SP", "D", "S", "XR", "PF", "FC", "FORCE", "B", "C", "P", "OTU", "IRPLU",
                                 "N", "G", "ONE", "VIT", "O", "AY", "H","ETA", "WIA", "IV", "IR", "RING", "WATER", "SR", "RL", "PFS", "MR", "DP", "NS", "WIDA" , "E",
-                             "Q", "TB", "TABLET", "GP", "MMR", "M", "WI", "Z", "NEO", "MIX", "GRANULE", "TT", "NA", "CL", "L", "FT", "MG", "KID", "HCL", "NACL"]
+                             "Q", "TB", "TABLET", "GP", "MMR", "M", "WI", "Z", "NEO", "MIX", "GRANULE", "TT", "NA", "CL", "L", "FT", "MG", "KID", "HCL"]
             
             # Gabungkan semua kata yang akan dihapus menjadi pola regex
             excluded_pattern = r'\b(?:' + '|'.join(map(re.escape, excluded_words)) + r')\b'
