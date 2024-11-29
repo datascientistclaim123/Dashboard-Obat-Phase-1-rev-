@@ -158,4 +158,4 @@ def display_table(index):
             st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
 
 # Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
-for i in range(1
+for i in range(1)
