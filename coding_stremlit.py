@@ -72,6 +72,11 @@ else:
             st.dataframe(subset, height=300)  # Menampilkan semua kolom
 
             if 'Amount Bill' in subset.columns:
+                # Pastikan kolom hanya berisi angka
+                subset['Amount Bill'] = pd.to_numeric(subset['Amount Bill'], errors='coerce')
+                subset['Amount Bill'] = subset['Amount Bill'].fillna(0)
+
+                # Penjumlahan
                 total_amount_bill = subset['Amount Bill'].sum()
                 formatted_total_amount_bill = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
                 st.text(f"Total Amount Bill: {formatted_total_amount_bill}")
