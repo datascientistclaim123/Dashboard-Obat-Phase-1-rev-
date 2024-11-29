@@ -3,7 +3,7 @@ import pandas as pd
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
-# Cache untuk membaca dataset baru
+# Cache untuk membaca dataset
 @st.cache_data
 def load_data(file_path):
     return pd.read_excel(file_path)
@@ -14,84 +14,78 @@ df = load_data("Data Obat Input Billing Manual.xlsx")  # Ganti dengan path file 
 # Streamlit App Title
 st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
 
-# Filter Utama
-st.header("Pilih Filter untuk Membandingkan Data")
-
-# Menampilkan semua kolom yang tersedia di dataset
+# Menampilkan preview data
 st.subheader("Preview Data")
 st.write(f"Dataset berisi {df.shape[0]} baris dan {df.shape[1]} kolom.")
 st.dataframe(df)
 
-# Filter untuk Group Provider
-if 'GroupProvider' in df.columns:
+# Container untuk mengelola tabel dinamis
+tabel_container = st.container()
+
+# State untuk menyimpan jumlah tabel yang ditampilkan
+if "table_count" not in st.session_state:
+    st.session_state.table_count = 1  # Mulai dengan 1 tabel
+
+# Fungsi untuk menampilkan tabel berdasarkan filter
+def display_table(index):
+    st.subheader(f"Tabel {index}")
+    
+    # Filter untuk Group Provider
     selected_group_providers = st.multiselect(
-        "Pilih Group Provider:",
-        options=df['GroupProvider'].dropna().unique(),
-        default=df['GroupProvider'].dropna().unique()[:1]
+        f"[Tabel {index}] Pilih Group Provider:",
+        options=df['GroupProvider'].dropna().unique() if 'GroupProvider' in df.columns else [],
+        default=[],
+        key=f"group_provider_{index}"
     )
-else:
-    selected_group_providers = []
-    st.warning("Kolom 'GroupProvider' tidak ditemukan di dataset.")
 
-# Filter untuk Treatment Place
-if 'TreatmentPlace' in df.columns:
+    # Filter untuk Treatment Place
     selected_treatment_places = st.multiselect(
-        "Pilih Treatment Place:",
-        options=df['TreatmentPlace'].dropna().unique(),
-        default=df['TreatmentPlace'].dropna().unique()[:1]
+        f"[Tabel {index}] Pilih Treatment Place:",
+        options=df['TreatmentPlace'].dropna().unique() if 'TreatmentPlace' in df.columns else [],
+        default=[],
+        key=f"treatment_place_{index}"
     )
-else:
-    selected_treatment_places = []
-    st.warning("Kolom 'TreatmentPlace' tidak ditemukan di dataset.")
 
-# Proses Data Filter
-@st.cache_data
-def filter_data(df, selected_treatment_places, selected_group_providers):
-    filtered = df
-    if selected_treatment_places:
-        filtered = filtered[filtered['TreatmentPlace'].isin(selected_treatment_places)]
+    # Filter data
+    filtered_df = df.copy()
     if selected_group_providers:
-        filtered = filtered[filtered['GroupProvider'].isin(selected_group_providers)]
-    return filtered
+        filtered_df = filtered_df[filtered_df['GroupProvider'].isin(selected_group_providers)]
+    if selected_treatment_places:
+        filtered_df = filtered_df[filtered_df['TreatmentPlace'].isin(selected_treatment_places)]
 
-filtered_df = filter_data(df, selected_treatment_places, selected_group_providers)
+    if filtered_df.empty:
+        st.warning(f"Tidak ada data untuk filter di tabel {index}.")
+    else:
+        # Menampilkan tabel
+        st.dataframe(filtered_df, height=300)
 
-if filtered_df.empty:
-    st.warning("Tidak ada data untuk filter yang dipilih.")
-else:
-    # Tabs untuk perbandingan
-    st.header("Perbandingan Data")
-    tabs = st.tabs([f"Tab {i+1}" for i in range(len(selected_treatment_places))])
+        # Total Amount Bill
+        if 'Amount Bill' in filtered_df.columns:
+            filtered_df['Amount Bill'] = pd.to_numeric(filtered_df['Amount Bill'], errors='coerce').fillna(0)
+            total_amount_bill = filtered_df['Amount Bill'].sum()
+            formatted_total = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
+            st.text(f"Total Amount Bill: {formatted_total}")
+        else:
+            st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
 
-    for i, tab in enumerate(tabs):
-        with tab:
-            treatment = selected_treatment_places[i] if selected_treatment_places else "Semua Treatment"
-            subset = filtered_df[filtered_df['TreatmentPlace'] == treatment] if selected_treatment_places else filtered_df
+        # WordCloud
+        if 'Nama Item Garda Medika' in filtered_df.columns:
+            st.subheader("WordCloud")
+            wordcloud_text = " ".join(filtered_df['Nama Item Garda Medika'].dropna().astype(str))
+            wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
 
-            st.subheader(f"Tabel Data untuk {treatment}")
-            st.dataframe(subset, height=300)  # Menampilkan semua kolom
+            fig, ax = plt.subplots(figsize=(10, 5))
+            ax.imshow(wordcloud, interpolation="bilinear")
+            ax.axis("off")
+            st.pyplot(fig)
+        else:
+            st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
 
-            if 'Amount Bill' in subset.columns:
-                # Pastikan kolom hanya berisi angka
-                subset['Amount Bill'] = pd.to_numeric(subset['Amount Bill'], errors='coerce')
-                subset['Amount Bill'] = subset['Amount Bill'].fillna(0)
+# Menampilkan tabel dinamis berdasarkan jumlah tabel di session state
+for i in range(1, st.session_state.table_count + 1):
+    with tabel_container:
+        display_table(i)
 
-                # Penjumlahan
-                total_amount_bill = subset['Amount Bill'].sum()
-                formatted_total_amount_bill = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
-                st.text(f"Total Amount Bill: {formatted_total_amount_bill}")
-            else:
-                st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
-
-            if 'Nama Item Garda Medika' in subset.columns:
-                # WordCloud
-                st.subheader("WordCloud")
-                wordcloud_text = " ".join(subset['Nama Item Garda Medika'].dropna().astype(str))
-                wordcloud = WordCloud(width=800, height=400, background_color="white").generate(wordcloud_text)
-                
-                fig, ax = plt.subplots(figsize=(10, 5))
-                ax.imshow(wordcloud, interpolation="bilinear")
-                ax.axis("off")
-                st.pyplot(fig)
-            else:
-                st.warning("Kolom 'Nama Item Garda Medika' tidak ditemukan di dataset.")
+# Tombol untuk menambah tabel baru
+if st.button("Insert Tabel Baru"):
+    st.session_state.table_count += 1
