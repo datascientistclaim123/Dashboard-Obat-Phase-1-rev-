@@ -37,30 +37,29 @@ if "table_count" not in st.session_state:
 def display_table(index):
     st.subheader(f"Tabel {index}")
 
-    # Filter untuk Group Provider
-    selected_group_providers = st.multiselect(
-        f"[Tabel {index}] Pilih Group Provider:",
-        options=df['GroupProvider'].dropna().unique() if 'GroupProvider' in df.columns else [],
-        default=[],
-        key=f"group_provider_{index}"
-    )
-
-    # Filter untuk Treatment Place berdasarkan Group Provider
-    if selected_group_providers:
-        filtered_temp = df[df['GroupProvider'].isin(selected_group_providers)]
-    else:
-        filtered_temp = df.copy()
-
     # Filter untuk Treatment Place
     selected_treatment_places = st.multiselect(
         f"[Tabel {index}] Pilih Treatment Place:",
-        options=filtered_temp['TreatmentPlace'].dropna().unique() if 'TreatmentPlace' in filtered_temp.columns else [],
+        options=df['TreatmentPlace'].dropna().unique() if 'TreatmentPlace' in df.columns else [],
         default=[],
         key=f"treatment_place_{index}"
     )
 
+    # Filter Group Provider yang bergantung pada pilihan Treatment Place
+    if selected_treatment_places:
+        filtered_temp = df[df['TreatmentPlace'].isin(selected_treatment_places)]
+    else:
+        filtered_temp = df.copy()
+
+    selected_group_providers = st.multiselect(
+        f"[Tabel {index}] Pilih Group Provider:",
+        options=filtered_temp['GroupProvider'].dropna().unique() if 'GroupProvider' in filtered_temp.columns else [],
+        default=[],
+        key=f"group_provider_{index}"
+    )
+
     # Filter untuk Doctor Name berdasarkan Treatment Place
-    filtered_doctors = filtered_temp[filtered_temp['TreatmentPlace'].isin(selected_treatment_places)]['DoctorName'].dropna().unique() if selected_treatment_places else filtered_temp['DoctorName'].dropna().unique()
+    filtered_doctors = filtered_temp[filtered_temp['GroupProvider'].isin(selected_group_providers)]['DoctorName'].dropna().unique() if selected_group_providers else filtered_temp['DoctorName'].dropna().unique()
     selected_doctors = st.multiselect(
         f"[Tabel {index}] Pilih Doctor Name:",
         options=filtered_doctors,
@@ -87,6 +86,8 @@ def display_table(index):
 
     # Filter data akhir berdasarkan semua filter
     filtered_df = filtered_temp.copy()
+    if selected_group_providers:
+        filtered_df = filtered_df[filtered_df['GroupProvider'].isin(selected_group_providers)]
     if selected_treatment_places:
         filtered_df = filtered_df[filtered_df['TreatmentPlace'].isin(selected_treatment_places)]
     if selected_doctors:
