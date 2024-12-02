@@ -16,7 +16,10 @@ df = load_data("Data Obat Input Billing Manual Revisi.xlsx")  # Ganti dengan pat
 df['Qty'] = pd.to_numeric(df['Qty'], errors='coerce').fillna(0)
 df['Amount Bill'] = pd.to_numeric(df['Amount Bill'], errors='coerce').fillna(0)
 
-# Streamlit App Title
+st.sidebar.title("Navigasi")
+selected_page = st.sidebar.radio("Pilih Halaman:", ["Page 1", "Page 2"])
+
+if selected_page == "Page 1":
 st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
 
 # Tambahkan teks kecil untuk "Created by"
@@ -183,10 +186,6 @@ for i in range(1, st.session_state.table_count + 1):
 if st.button("Insert Tabel Baru"):
     st.session_state.table_count += 1
 
+elif selected_page == "Page 2":
+    st.title("Page 2: Analisis Tambahan")
 
-st.title("Page 2: Search Obat")
-st.write("Ini adalah halaman kedua dalam aplikasi Streamlit Anda.")
-
-# Anda bisa menambahkan analisis atau visualisasi lainnya di sini.
-st.subheader("Fitur Analisis Baru")
-st.write("Tambahkan konten atau fitur yang sesuai untuk page 2.")
