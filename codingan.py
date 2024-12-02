@@ -166,52 +166,61 @@ if selected_page == "Page 1":
 elif selected_page == "Page 2":
     # Page 2: Analisis Tambahan
     st.title("Page 2: Pencarian Data Berdasarkan Kriteria")
-    
-    # Filter data dinamis
+
+    # Tambahkan teks kecil untuk "Created by"
+    st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
+
+    # Inisialisasi data terfilter
     filtered_df = df.copy()
-    
-    # Dropdown pencarian dengan opsi terfilter
+
+    # Pilihan filter berdasarkan kolom yang relevan
     selected_items = st.multiselect(
         "Cari di kolom 'Nama Item Garda Medika':",
         options=filtered_df['Nama Item Garda Medika'].dropna().unique(),
-        default=None,
-        key="nama_item"
+        default=[],
+        key="filter_items"
     )
     if selected_items:
         filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
-    
+
     selected_golongan = st.multiselect(
         "Cari di kolom 'Golongan':",
         options=filtered_df['Golongan'].dropna().unique(),
-        default=None,
-        key="golongan"
+        default=[],
+        key="filter_golongan"
     )
     if selected_golongan:
         filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
-    
+
     selected_subgolongan = st.multiselect(
         "Cari di kolom 'Subgolongan':",
         options=filtered_df['Subgolongan'].dropna().unique(),
-        default=None,
-        key="subgolongan"
+        default=[],
+        key="filter_subgolongan"
     )
     if selected_subgolongan:
         filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
-    
+
     selected_komposisi = st.multiselect(
         "Cari di kolom 'Komposisi Zat Aktif':",
         options=filtered_df['Komposisi Zat Aktif'].dropna().unique(),
-        default=None,
-        key="komposisi"
+        default=[],
+        key="filter_komposisi"
     )
     if selected_komposisi:
         filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
-    
-    # Tampilkan hasil pencarian
+
+    # Tampilkan hasil filter
     if filtered_df.empty:
         st.warning("Tidak ada data yang cocok dengan kriteria pencarian.")
     else:
-        # Kolom hasil yang ingin ditampilkan
+        # Kolom yang akan ditampilkan di hasil pencarian
         display_columns = ['GroupProvider', 'TreatmentPlace', 'DoctorName']
-        st.subheader("Hasil Pencarian")
-        st.dataframe(filtered_df[display_columns])
+        result_df = filtered_df[display_columns].drop_duplicates()
+
+        st.subheader("Hasil Pencarian Berdasarkan Filter")
+        st.dataframe(result_df)
+
+        # Total jumlah entri yang ditampilkan
+        total_entries = len(result_df)
+        st.markdown(f"**Total hasil: {total_entries} entri.**")
