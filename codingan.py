@@ -167,20 +167,43 @@ elif selected_page == "Page 2":
     # Page 2: Analisis Tambahan
     st.title("Page 2: Pencarian Data Berdasarkan Kriteria")
     
-    # Dropdown untuk pencarian
-    selected_items = st.multiselect("Cari di kolom 'Nama Item Garda Medika':", df['Nama Item Garda Medika'].dropna().unique())
-    selected_golongan = st.multiselect("Cari di kolom 'Golongan':", df['Golongan'].dropna().unique())
-    selected_subgolongan = st.multiselect("Cari di kolom 'Subgolongan':", df['Subgolongan'].dropna().unique())
-    selected_komposisi = st.multiselect("Cari di kolom 'Komposisi Zat Aktif':", df['Komposisi Zat Aktif'].dropna().unique())
-    
-    # Filter data berdasarkan input dropdown
+    # Filter data dinamis
     filtered_df = df.copy()
+    
+    # Dropdown pencarian dengan opsi terfilter
+    selected_items = st.multiselect(
+        "Cari di kolom 'Nama Item Garda Medika':",
+        options=filtered_df['Nama Item Garda Medika'].dropna().unique(),
+        default=None,
+        key="nama_item"
+    )
     if selected_items:
         filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
+    
+    selected_golongan = st.multiselect(
+        "Cari di kolom 'Golongan':",
+        options=filtered_df['Golongan'].dropna().unique(),
+        default=None,
+        key="golongan"
+    )
     if selected_golongan:
         filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
+    
+    selected_subgolongan = st.multiselect(
+        "Cari di kolom 'Subgolongan':",
+        options=filtered_df['Subgolongan'].dropna().unique(),
+        default=None,
+        key="subgolongan"
+    )
     if selected_subgolongan:
         filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
+    
+    selected_komposisi = st.multiselect(
+        "Cari di kolom 'Komposisi Zat Aktif':",
+        options=filtered_df['Komposisi Zat Aktif'].dropna().unique(),
+        default=None,
+        key="komposisi"
+    )
     if selected_komposisi:
         filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
     
