@@ -182,3 +182,11 @@ for i in range(1, st.session_state.table_count + 1):
 # Tombol untuk menambah tabel baru
 if st.button("Insert Tabel Baru"):
     st.session_state.table_count += 1
+
+
+st.title("Page 2: Search Obat")
+st.write("Ini adalah halaman kedua dalam aplikasi Streamlit Anda.")
+
+# Anda bisa menambahkan analisis atau visualisasi lainnya di sini.
+st.subheader("Fitur Analisis Baru")
+st.write("Tambahkan konten atau fitur yang sesuai untuk page 2.")
