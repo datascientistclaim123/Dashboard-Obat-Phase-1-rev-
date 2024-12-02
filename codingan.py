@@ -165,10 +165,29 @@ if selected_page == "Page 1":
 
 elif selected_page == "Page 2":
     # Page 2: Analisis Tambahan
-    st.title("Page 2: Analisis Tambahan")
-    st.write("Ini adalah halaman kedua dalam aplikasi Streamlit Anda.")
-
-    st.subheader("Fitur Analisis Baru")
-    st.write("Tambahkan konten atau fitur yang sesuai untuk page 2.")
-
-
+    st.title("Page 2: Pencarian Data Berdasarkan Kriteria")
+    
+    # Dropdown untuk pencarian
+    selected_items = st.multiselect("Cari di kolom 'Nama Item Garda Medika':", df['Nama Item Garda Medika'].dropna().unique())
+    selected_golongan = st.multiselect("Cari di kolom 'Golongan':", df['Golongan'].dropna().unique())
+    selected_subgolongan = st.multiselect("Cari di kolom 'Subgolongan':", df['Subgolongan'].dropna().unique())
+    selected_komposisi = st.multiselect("Cari di kolom 'Komposisi Zat Aktif':", df['Komposisi Zat Aktif'].dropna().unique())
+    
+    # Filter data berdasarkan input dropdown
+    filtered_df = df.copy()
+    if selected_items:
+        filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
+    if selected_golongan:
+        filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
+    if selected_subgolongan:
+        filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
+    if selected_komposisi:
+        filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
+    
+    # Tampilkan hasil pencarian
+    if filtered_df.empty:
+        st.warning("Tidak ada data yang cocok dengan kriteria pencarian.")
+    else:
+        # Kolom hasil yang ingin ditampilkan
+        display_columns = ['GroupProvider', 'TreatmentPlace', 'DoctorName']
+        st.sub
