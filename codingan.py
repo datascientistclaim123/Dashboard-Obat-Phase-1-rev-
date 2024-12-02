@@ -171,3 +171,4 @@ elif selected_page == "Page 2":
     st.subheader("Fitur Analisis Baru")
     st.write("Tambahkan konten atau fitur yang sesuai untuk page 2.")
 
+
