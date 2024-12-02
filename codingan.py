@@ -190,4 +190,5 @@ elif selected_page == "Page 2":
     else:
         # Kolom hasil yang ingin ditampilkan
         display_columns = ['GroupProvider', 'TreatmentPlace', 'DoctorName']
-        st.sub
+        st.subheader("Hasil Pencarian")
+        st.dataframe(filtered_df[display_columns])
