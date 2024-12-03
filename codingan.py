@@ -165,7 +165,7 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
 
 elif selected_page == "Distribusi Provider Berdasarkan Obat":
     # Page 2: Analisis Tambahan
-    st.title("Dashboard Sebaran Provider Berdasarkan Obat 💊")
+    st.title("Dashboard Sebaran Provider Berdasarkan Obat 🏥")
 
     # Tambahkan teks kecil untuk "Created by"
     # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
