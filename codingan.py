@@ -160,7 +160,7 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
                               "N","G","ONE","VIT","O","AY","H","ETA","WIA","IV","IR","RING","WATER","SR","RL","PFS","MR","DP","NS","WIDA" ,"E","0D","BMT","MINIDOSE",
                               "Q", "TB", "TABLET", "GP", "MMR", "M", "WI", "Z", "NEO", "MIX", "GRANULE", "TT", "NA", "CL", "L", "FT", "MG", "KID", "HCL", "KIDS","DAILY",
                               "CARE", "F", "NEBULE", "NACL", "PAED", "DEWASA", "ORAL", "BABY", "LFX", "GEL", "JELLY", "STRAWBERRY", "NATRIUM", "ENEMA", "DHA", "ORAL",
-                              "KA","EN","NEW","BHP","DUO","C0","CO","AL","GEL","DMP","KCL","PEN","T","INJECTION","PPD","DS"]
+                              "KA","EN","NEW","BHP","DUO","C0","CO","AL","GEL","DMP","KCL","PEN","T","INJECTION","PPD","DS","SODIUM","EXPECTORANT","JUNIOR"]
 
             # Gabungkan semua kata yang akan dihapus menjadi pola regex
             excluded_pattern = r'\b(?:' + '|'.join(map(re.escape, excluded_words)) + r')\b'
