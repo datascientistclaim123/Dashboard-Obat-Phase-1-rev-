@@ -195,3 +195,103 @@ elif selected_page == "Distribusi Provider Berdasarkan Obat":
     # Preview data di halaman ini
     st.subheader("Preview Data")
     st.dataframe(df)
+
+# Fungsi untuk menampilkan tabel berdasarkan filter di Page 2
+def display_table_page_2(index):
+    st.subheader(f"Tabel {index}")
+
+    # Ambil filter dari session_state jika ada
+    selected_items = st.session_state.get(f"nama_item_{index}", [])
+    selected_golongan = st.session_state.get(f"golongan_{index}", [])
+    selected_subgolongan = st.session_state.get(f"subgolongan_{index}", [])
+    selected_komposisi = st.session_state.get(f"komposisi_{index}", [])
+
+    # Filter data berdasarkan semua pilihan saat ini
+    filtered_df = df.copy()
+    if selected_items:
+        filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
+    if selected_golongan:
+        filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
+    if selected_subgolongan:
+        filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
+    if selected_komposisi:
+        filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
+
+    # Pilihan untuk setiap filter berdasarkan data yang sudah difilter
+    item_options = filtered_df['Nama Item Garda Medika'].dropna().unique()
+    golongan_options = filtered_df['Golongan'].dropna().unique()
+    subgolongan_options = filtered_df['Subgolongan'].dropna().unique()
+    komposisi_options = filtered_df['Komposisi Zat Aktif'].dropna().unique()
+
+    # Komponen filter
+    selected_items = st.multiselect(
+        f"[Tabel {index}] Pilih Nama Item Garda Medika:",
+        options=item_options,
+        default=selected_items,
+        key=f"nama_item_{index}"
+    )
+    selected_golongan = st.multiselect(
+        f"[Tabel {index}] Pilih Golongan:",
+        options=golongan_options,
+        default=selected_golongan,
+        key=f"golongan_{index}"
+    )
+    selected_subgolongan = st.multiselect(
+        f"[Tabel {index}] Pilih Subgolongan:",
+        options=subgolongan_options,
+        default=selected_subgolongan,
+        key=f"subgolongan_{index}"
+    )
+    selected_komposisi = st.multiselect(
+        f"[Tabel {index}] Pilih Komposisi Zat Aktif:",
+        options=komposisi_options,
+        default=selected_komposisi,
+        key=f"komposisi_{index}"
+    )
+
+    # Filter ulang data berdasarkan input terbaru
+    filtered_df = df.copy()
+    if selected_items:
+        filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
+    if selected_golongan:
+        filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
+    if selected_subgolongan:
+        filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
+    if selected_komposisi:
+        filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
+
+    if filtered_df.empty:
+        st.warning(f"Tidak ada data untuk filter di tabel {index}.")
+    else:
+        # Mengelompokkan berdasarkan "Nama Item Garda Medika"
+        grouped_df = filtered_df.groupby("Nama Item Garda Medika").agg(
+            Qty=('Qty', 'sum'),
+            AmountBill=('Amount Bill', 'sum'),
+            HargaSatuan=('Harga Satuan', 'median'),
+            Golongan=('Golongan', 'first'),
+            Subgolongan=('Subgolongan', 'first'),
+            KomposisiZatAktif=('Komposisi Zat Aktif', 'first')
+        ).reset_index()
+
+        # Hilangkan desimal dengan pembulatan
+        grouped_df['Qty'] = grouped_df['Qty'].astype(int)
+        grouped_df['AmountBill'] = grouped_df['AmountBill'].astype(int)
+        grouped_df['HargaSatuan'] = grouped_df['HargaSatuan'].fillna(0).round(0).astype(int)
+
+        # Pindahkan kolom Qty, Amount Bill, dan Harga Satuan ke paling kanan
+        column_order = [
+            col for col in grouped_df.columns if col not in ['Qty', 'AmountBill', 'HargaSatuan']
+        ] + ['Qty', 'AmountBill', 'HargaSatuan']
+        grouped_df = grouped_df[column_order]
+
+        # Menampilkan tabel yang sudah digabungkan
+        st.dataframe(grouped_df, height=300)
+
+        # Total Amount Bill
+        if 'AmountBill' in grouped_df.columns:
+            total_amount_bill = grouped_df['AmountBill'].sum()
+            formatted_total = f"Rp {total_amount_bill:,.0f}".replace(",", ".")
+            st.markdown(f"**Total Amount Bill: {formatted_total}**")
+        else:
+            st.warning("Kolom 'Amount Bill' tidak ditemukan di dataset.")
+
