@@ -195,7 +195,7 @@ elif selected_page == "Distribusi Provider Berdasarkan Obat":
     # Tambahkan teks kecil untuk "Created by"
     # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
 @st.cache_data
-def load_data(file_patch)
+def load_data(file_patch):
     return pd.read_excel(file_path)
 
 #load data sebelumnya
