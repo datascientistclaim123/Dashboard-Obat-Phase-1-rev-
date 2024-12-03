@@ -187,17 +187,11 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
     # Tombol untuk menambah tabel baru
     if st.button("Insert Tabel Baru"):
         st.session_state.table_count += 1
-
+        
 elif selected_page == "Distribusi Provider Berdasarkan Obat":
-    # Page 2: Analisis Tambahan
+    # Page 2: Dashboard Provider Berdasarkan Obat
     st.title("Dashboard Sebaran Provider Berdasarkan Obat 🏥")
 
-    # Tambahkan teks kecil untuk "Created by"
-    # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
-@st.cache_data
-def load_data(file_patch):
-    return pd.read_excel(file_path)
-
-#load data sebelumnya
-df = load_data("Data Obat Input Billing Manual Revisi.xlsx")
-
+    # Preview data di halaman ini
+    st.subheader("Preview Data")
+    st.dataframe(df)
