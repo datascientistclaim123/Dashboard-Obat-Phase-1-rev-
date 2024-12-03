@@ -25,7 +25,7 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
     st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
 
     # Tambahkan teks kecil untuk "Created by"
-    st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
+    # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
 
     # Menampilkan preview data
     st.subheader("Preview Data")
@@ -168,7 +168,7 @@ elif selected_page == "Perbandingan Obat antar Provider":
     st.title("Page 2: Pencarian Data Berdasarkan Kriteria")
 
     # Tambahkan teks kecil untuk "Created by"
-    st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
+    # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
 
     # Inisialisasi data terfilter
     filtered_df = df.copy()
