@@ -18,7 +18,7 @@ df['Amount Bill'] = pd.to_numeric(df['Amount Bill'], errors='coerce').fillna(0)
 
 # Sidebar untuk navigasi
 st.sidebar.title("Navigasi")
-selected_page = st.sidebar.radio("Pilih Halaman:", ["Distribusi Penggunaan Obat per Provider", "Perbandingan Obat antar Provider"])
+selected_page = st.sidebar.radio("Pilih Halaman:", ["Distribusi Penggunaan Obat per Provider", "Distribusi Provider Berdasarkan Obat"])
 
 if selected_page == "Distribusi Penggunaan Obat per Provider":
     # Page 1: Dashboard Sebaran Obat
@@ -163,7 +163,7 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
     if st.button("Insert Tabel Baru"):
         st.session_state.table_count += 1
 
-elif selected_page == "Perbandingan Obat antar Provider":
+elif selected_page == "Distribusi Provider Berdasarkan Obat":
     # Page 2: Analisis Tambahan
     st.title("Dashboard Sebaran Provider Berdasarkan Obat 💊")
 
