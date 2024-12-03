@@ -200,3 +200,4 @@ def load_data(file_patch):
 
 #load data sebelumnya
 df = load_data("Data Obat Input Billing Manual Revisi.xlsx")
+
