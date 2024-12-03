@@ -199,4 +199,4 @@ def load_data(file_patch):
     return pd.read_excel(file_path)
 
 #load data sebelumnya
-df = load_data("Data Obat Input Billing Manual Revisi.xslx")
+df = load_data("Data Obat Input Billing Manual Revisi.xlsx")
