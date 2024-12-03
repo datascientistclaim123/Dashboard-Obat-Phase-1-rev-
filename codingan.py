@@ -107,18 +107,3 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
         },
         title="Tabel Sebaran Penggunaan Obat per Provider"
     )
-
-# Halaman 2: Distribusi Provider Berdasarkan Obat
-elif selected_page == "Distribusi Provider Berdasarkan Obat":
-    st.title("Dashboard Sebaran Provider Berdasarkan Obat 🏥")
-    st.dataframe(df)  # Preview data
-    display_table(
-        filtered_df=df.copy(),
-        filter_columns=['Nama Item Garda Medika', 'Golongan', 'Subgolongan', 'Komposisi Zat Aktif'],
-        group_by_column="GroupProvider",
-        aggregation_map={
-            "Qty": ('Qty', 'sum'),
-            "AmountBill": ('Amount Bill', 'sum')
-        },
-        title="Tabel Sebaran Provider Berdasarkan Obat"
-    )
