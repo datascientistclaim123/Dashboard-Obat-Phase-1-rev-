@@ -22,7 +22,7 @@ selected_page = st.sidebar.radio("Pilih Halaman:", ["Distribusi Penggunaan Obat 
 
 if selected_page == "Distribusi Penggunaan Obat per Provider":
     # Page 1: Dashboard Sebaran Obat
-    st.title("Dashboard Sebaran Obat di Tiap Rumah Sakit 💊")
+    st.title("Dashboard Sebaran Obat di Tiap Provider 💊")
 
     # Tambahkan teks kecil untuk "Created by"
     # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
@@ -165,7 +165,7 @@ if selected_page == "Distribusi Penggunaan Obat per Provider":
 
 elif selected_page == "Perbandingan Obat antar Provider":
     # Page 2: Analisis Tambahan
-    st.title("Page 2: Pencarian Data Berdasarkan Kriteria")
+    st.title("Dashboard Sebaran Provider Berdasarkan Obat 💊")
 
     # Tambahkan teks kecil untuk "Created by"
     # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
