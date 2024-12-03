@@ -194,58 +194,9 @@ elif selected_page == "Distribusi Provider Berdasarkan Obat":
 
     # Tambahkan teks kecil untuk "Created by"
     # st.markdown("<small>Created by: Dexcel Oswald Otniel</small>", unsafe_allow_html=True)
+@st.cache_data
+def load_data(file_patch)
+    return pd.read_excel(file_path)
 
-    # Inisialisasi data terfilter
-    filtered_df = df.copy()
-
-    # Pilihan filter berdasarkan kolom yang relevan
-    selected_items = st.multiselect(
-        "Cari di kolom 'Nama Item Garda Medika':",
-        options=filtered_df['Nama Item Garda Medika'].dropna().unique(),
-        default=[],
-        key="filter_items"
-    )
-    if selected_items:
-        filtered_df = filtered_df[filtered_df['Nama Item Garda Medika'].isin(selected_items)]
-
-    selected_golongan = st.multiselect(
-        "Cari di kolom 'Golongan':",
-        options=filtered_df['Golongan'].dropna().unique(),
-        default=[],
-        key="filter_golongan"
-    )
-    if selected_golongan:
-        filtered_df = filtered_df[filtered_df['Golongan'].isin(selected_golongan)]
-
-    selected_subgolongan = st.multiselect(
-        "Cari di kolom 'Subgolongan':",
-        options=filtered_df['Subgolongan'].dropna().unique(),
-        default=[],
-        key="filter_subgolongan"
-    )
-    if selected_subgolongan:
-        filtered_df = filtered_df[filtered_df['Subgolongan'].isin(selected_subgolongan)]
-
-    selected_komposisi = st.multiselect(
-        "Cari di kolom 'Komposisi Zat Aktif':",
-        options=filtered_df['Komposisi Zat Aktif'].dropna().unique(),
-        default=[],
-        key="filter_komposisi"
-    )
-    if selected_komposisi:
-        filtered_df = filtered_df[filtered_df['Komposisi Zat Aktif'].isin(selected_komposisi)]
-
-    # Tampilkan hasil filter
-    if filtered_df.empty:
-        st.warning("Tidak ada data yang cocok dengan kriteria pencarian.")
-    else:
-        # Kolom yang akan ditampilkan di hasil pencarian
-        display_columns = ['GroupProvider', 'TreatmentPlace', 'DoctorName']
-        result_df = filtered_df[display_columns].drop_duplicates()
-
-        st.subheader("Hasil Pencarian Berdasarkan Filter")
-        st.dataframe(result_df)
-
-        # Total jumlah entri yang ditampilkan
-        total_entries = len(result_df)
-        st.markdown(f"**Total hasil: {total_entries} entri.**")
+#load data sebelumnya
+df = load_data("Data Obat Input Billing Manual Revisi.xslx")
